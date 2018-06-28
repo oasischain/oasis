@@ -1,0 +1,7 @@
+# Windows
+
+curl localhost:5555/mine
+
+curl localhost:5555/blocks
+
+curl 127.0.0.1:5555/txion -H "Content-Type:application/json" -d "{\"from\":\"tai\",\"to\":\"chris\",\"amount\":38}"
