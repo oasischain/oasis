@@ -55,24 +55,27 @@ def transaction():
 def get_blocks_raw():
   a_cur_chain = consensus.get_chain()
   
-  msg = ""
+  msg = "["
   for aBlock in a_cur_chain:
-    msg += str(aBlock)
+    msg += str(aBlock) + ","
   
+  msg = msg[:-1]
+  
+  msg += "]"
   return msg
 
 @node.route('/blocks', methods=['GET'])
 def get_blocks():
-  
   chain_to_send = []
 
   a_cur_chain = consensus.get_chain()
-  
+  # convert from Block type to json
   for aBlock in a_cur_chain:
     chain_to_send.append({
-      "index": str(aBlock.index),
+      "index": aBlock.index,
       "timestamp": str(aBlock.timestamp),
-      "data": str(aBlock.data),
+      "data": aBlock.data, 
+      "previous_hash": aBlock.previous_hash,
       "hash": aBlock.hash
     })
 

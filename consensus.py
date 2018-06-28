@@ -43,17 +43,14 @@ def _find_new_chains():
   # Get the blockchains from every other node
   other_chains = []
   for node_url in config.PEER_NODES:
-    # Get their chains using a GET request
-    block = requests.get(node_url + "/blocks").content
-    # Convert the JSON object to a Python dictionary
-    block = json.loads(block)
-    # Add it to our list
-    other_chains.append(block)
+    blocks = requests.get(node_url + "/blocks").content
+    chain = json.loads(blocks)
+    other_chains.append(chain)
   return other_chains
 
 def find_longest_chain():
   global blockchain
-  msg = "Current chain is the longest one.<br>" + str(blockchain) + str(len(blockchain)) + "<----<br>"
+  msg = "Current chain is the longest one.<br>" + str(len(blockchain)) + "<----<br>"
   # Get the blocks from other nodes
   other_chains = _find_new_chains()
   # If our chain isn't longest,
@@ -61,11 +58,31 @@ def find_longest_chain():
   new_longest_chain = blockchain
   for chain in other_chains:
     if len(new_longest_chain) < len(chain):
-      new_longest_chain = chain
-      blockchain = new_longest_chain
       msg = "Found longer chain. Reset done.<br>"
-      msg += "in consensus.py: " + str(blockchain) + str(len(blockchain)) + "<----<br>"
+      new_longest_chain = chain
+      #reset_chain(new_longest_chain)
+      blockchain[:] = []
+      for aBlock in new_longest_chain:
+          #msg += json.dumps(aBlock,default=json_util.default)
+          anIndex = aBlock['index']
+          aTimestamp = aBlock['timestamp']
+          aData = aBlock['data']
+          aPreviousHash = aBlock['previous_hash']
+          aHash = aBlock['hash']
+
+          blockchain.append(Block(anIndex, aTimestamp, aData, aPreviousHash, aHash))	
+      msg += str(len(blockchain)) + "<----<br>"
   # If the longest chain isn't ours,
   # then we stop mining and set
   # our chain to the longest one
   return (msg, new_longest_chain)
+
+'''
+def reset_chain(new_chain_data):
+  global blockchain
+  blockchain[:] = [] # clear
+  for block in new_chain_data:
+    print block
+    json.dumps(block,default=json_util.default)
+    blockchain.append(block)	
+'''	
