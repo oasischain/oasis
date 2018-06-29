@@ -2,8 +2,7 @@
 Oasis Chain
 
 '''
-from flask import Flask
-from flask import request
+from flask import Flask, render_template, request
 
 import json
 from bson import json_util
@@ -14,25 +13,21 @@ from block import Block
 import consensus
 from consensus import blockchain, CONSENSUS, this_nodes_transactions, miner_address
 
+from constants import web_msg_instructions, console_msg_welcome
+
 node = Flask(__name__)
 
 debug = True
 
-# Flask Routing functions 
+# URL Routing functions 
 @node.route('/', methods=['GET'])
 def index():
-  return '''<h1>/**** OASIS CHAIN ****/</h1>
-            <h2>Avaiable API commands:</h2>
-            <h3>/txion</h3>
-            Method: Post, E.g. curl "url:5000/txion" -H "Content-Type:applicaiton/json" -d '{"from":"tai","to":"chris","amount":3}' <br>
-            <h3>/blocks</h3>
-            Method: Get, list currenct blocks <br>
-            <h3>/test</h3>
-            Method: Test consensus function, if found longer chain, reset current<br>
-          '''
-  
+  return web_msg_instructions
 
-# Flask URL-funciton mappings
+@node.route('/txion', methods=['GET'])
+def new_transaction():
+  return render_template('txion.html')
+
 @node.route('/txion', methods=['POST'])
 def transaction():
 
@@ -141,8 +136,8 @@ def mine():
 
 
 def setup_app(node):
-   # All your initialization code
-   print "Welcome to Oasis Chain"
+   # Initialization code
+   print console_msg_welcome
    consensus.create_genesis_block()
    
 setup_app(node)

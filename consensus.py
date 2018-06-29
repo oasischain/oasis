@@ -22,7 +22,7 @@ miner_address = "c924da40248d517045a700f41a2fe1468f09e8ed67775c205fb5f2ff9da34bb
 def create_genesis_block():
   print("Creating genesis block.")
   blockchain.append(Block(0, date.datetime.now(), {CONSENSUS: 9, "transactions": None}, "0"))
-  print(str(blockchain))
+  print(str(blockchain[0].hash))
 
 def get_chain():
 	return blockchain
@@ -76,13 +76,3 @@ def find_longest_chain():
   # then we stop mining and set
   # our chain to the longest one
   return (msg, new_longest_chain)
-
-'''
-def reset_chain(new_chain_data):
-  global blockchain
-  blockchain[:] = [] # clear
-  for block in new_chain_data:
-    print block
-    json.dumps(block,default=json_util.default)
-    blockchain.append(block)	
-'''	

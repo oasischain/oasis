@@ -1,0 +1,47 @@
+<html>
+<head>
+    Oasis Chain: test transaction
+
+</head>
+
+<body>
+    <script type="text/javascript">
+
+    window.onload = function () {
+        document.getElementById("txform").onsubmit = function () {
+
+            var s_from = document.getElementById("txform").getElementsByTagName("input")[0].value;
+            var s_to = document.getElementById("txform").getElementsByTagName("input")[1].value;
+            var s_amount = document.getElementById("txform").getElementsByTagName("input")[2].value;
+
+            json_str = JSON.stringify({ from: s_from, to: s_to, amount: s_amount })
+
+            msg = "Sending " + json_str;
+            // alert(msg);
+
+            var xmlhttp = new XMLHttpRequest();
+            xmlhttp.open("POST", "/txion");
+            xmlhttp.setRequestHeader("Content-Type", "application/json");
+            xmlhttp.send(json_str);
+
+            return false;
+
+        };
+    };
+
+
+    </script>
+
+
+    <form id="txform">
+        From <input type="text" name="from"><br>
+        To <input type="text" name="to"><br>
+        Amount <input type="text" name="amount"><br>
+        <input type="submit" value="Submit">
+    </form>
+
+</body>
+
+
+
+</html>
